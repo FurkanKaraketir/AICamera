@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "163839182251",
+    "firebase_url": "https://ai-camera-d8590.firebaseio.com",
+    "project_id": "ai-camera-d8590",
+    "storage_bucket": "ai-camera-d8590.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163839182251:android:1dec4080a8e5b33258feee",
+        "android_client_info": {
+          "package_name": "com.furkankrktr.aicamera"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163839182251-eng3jt41kjpsocs36vh9ohbhde1thobj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdQCwrYEU_W8txcxZpOd1immTE2nt0bYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163839182251-eng3jt41kjpsocs36vh9ohbhde1thobj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
