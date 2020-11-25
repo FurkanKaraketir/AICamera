@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AI Photo</string>
+    <string name="image_choose">Image Choose</string>
+    <string name="find">Find</string>
 </resources>

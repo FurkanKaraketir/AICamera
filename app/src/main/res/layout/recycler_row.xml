@@ -4,7 +4,6 @@
     android:layout_width="150dp"
     android:layout_height="150dp"
     android:layout_margin="6dp"
-    app:cardBackgroundColor="#fff"
     app:cardCornerRadius="5dp">
 
     <LinearLayout
@@ -19,19 +18,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="Bird"
-            android:textColor="@color/colorPrimaryDark"
+            android:text=""
+            android:textColor="@color/pink"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/guvenTextView"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
-            android:text="%100"
-            android:textColor="@color/colorPrimary"
+            android:text=""
             android:textSize="18sp" />
 
     </LinearLayout>

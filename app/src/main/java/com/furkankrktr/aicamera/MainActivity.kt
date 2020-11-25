@@ -1,19 +1,19 @@
+@file:Suppress("DEPRECATION")
+
 package com.furkankrktr.aicamera
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
-import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,92 +22,94 @@ import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 import java.io.IOException
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-    var secilenGorsel: Uri? = null
-    var secilenBitmap: Bitmap? = null
+    private var secilenGorsel: Uri? = null
+    private var secilenBitmap: Bitmap? = null
 
-    var resultList = ArrayList<ResultModel>()
+    private var resultList = ArrayList<ResultModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         recyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = ResultAdapter(resultList)
+        imageView.setOnClickListener {
 
-    }
 
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                //izin verilmedi, iste
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
+                    ),
+                    1
+                )
 
-    fun gorselSec(view: View) {
+            } else {
+                //izin var
+                CropImage.activity().start(this)
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            //izin verilmedi, iste
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
-                ),
-                1
-            )
-
-        } else {
-            //izin var
-            CropImage.activity().start(this)
-
+            }
         }
-    }
 
-    fun find(view: View) {
-        resultList.clear()
+        buttonAi.setOnClickListener {
 
-        if (secilenBitmap != null) {
-            val image: InputImage
+            resultList.clear()
 
-            try {
-                image = InputImage.fromBitmap(secilenBitmap!!,0)
+            if (secilenBitmap != null) {
+                val image: InputImage
 
-                val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
+                try {
+                    image = InputImage.fromBitmap(secilenBitmap!!, 0)
 
-                labeler.process(image)
+                    val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
 
-                    .addOnSuccessListener { labels ->
-                        // Task completed successfully
-                        for (label in labels) {
-                            val text = label.text
-                            println(text)
-                            val confidence = label.confidence
-                            println(confidence)
-                            val gelenResult = ResultModel(text, confidence)
-                            resultList.add(gelenResult)
+                    labeler.process(image)
+
+                        .addOnSuccessListener { labels ->
+                            // Task completed successfully
+                            for (label in labels) {
+                                val text = label.text
+                                println(text)
+                                val confidence = label.confidence
+                                println(confidence)
+                                val gelenResult = ResultModel(text, confidence)
+                                resultList.add(gelenResult)
+                            }
+
+                            recyclerView.adapter?.notifyDataSetChanged()
+
                         }
+                        .addOnFailureListener { e ->
+                            // Task failed with an exception
+                            e.printStackTrace()
+                        }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
 
-                        recyclerView.adapter?.notifyDataSetChanged()
 
-                    }
-                    .addOnFailureListener { e ->
-                        // Task failed with an exception
-                        e.printStackTrace()
-                    }
-            } catch (e: IOException) {
-                e.printStackTrace()
+            } else {
+                Toast.makeText(this, "Choose an Image", Toast.LENGTH_SHORT).show()
             }
 
 
-        } else {
-            Toast.makeText(this, "Resim Seç", Toast.LENGTH_SHORT).show()
         }
+
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
